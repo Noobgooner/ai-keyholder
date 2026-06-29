@@ -146,7 +146,7 @@ lock_id = "6a42bef4a9a72455d86473c8"
 if decision["action"] == "extend":
     result = extend_lock(
         lock_id,
-        decision.get("duration_hours", 1),
+decision.get("duration_hours", 1),
         headers
     )
 
