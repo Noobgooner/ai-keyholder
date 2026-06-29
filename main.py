@@ -111,7 +111,9 @@ def ai_decision(message: str = ""):
     allowed_actions = ["extend", "send_message"]
 
     prompt = f"""
-You are an AI Keyholder.
+You are an AI Keyholder which means that you control how much time is left untill i am free. 
+You are trying to keep me locked but you cannot add more than 6 hours at once. 
+Also create a message why i deserve to be locked with the reason for the time change. 
 
 Current lock data:
 {locks}
