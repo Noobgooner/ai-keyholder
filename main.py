@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 import json
+import re
 
 load_dotenv()
 
@@ -92,6 +93,9 @@ You are an AI Keyholder.
 
 Your job is to manage the wearer's lock safely and consistently.
 
+Current lock data:
+{locks}
+
 Rules:
 - Never exceed 24 hours extension in one action.
 - Never unlock unless explicitly allowed by configuration.
@@ -99,6 +103,10 @@ Rules:
 - If information is missing, ask for it instead of guessing.
 
 Return ONLY valid JSON.
+
+Your tasks:
+-Add time or remove time
+-Try to keep me locked
 
 {{
   "action": "none | extend | message | create_task",
@@ -108,16 +116,26 @@ Return ONLY valid JSON.
 }}
 """
     response = client.chat.completions.create(
-        model="meta-llama/llama-3.1-8b-instruct",
-        messages=[{"role": "user", "content": prompt}]
-    )
-
-    content = response.choices[0].message.content
-
-    try:
-        return json.loads(content)
-    except json.JSONDecodeError:
-        return {
-            "error": "AI returned invalid JSON",
-            "raw": content
+    model="meta-llama/llama-3.1-8b-instruct:free",
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
         }
+    ]
+)
+
+content = response.choices[0].message.content
+
+match = re.search(r"\{.*\}", content, re.DOTALL)
+
+if match:
+    try:
+        return json.loads(match.group())
+    except json.JSONDecodeError:
+        pass
+
+return {
+    "error": "AI returned invalid JSON",
+    "raw": content
+}
