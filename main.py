@@ -1,3 +1,5 @@
+access_token = None
+
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 import os
@@ -35,6 +37,8 @@ def login():
 
 @app.get("/callback")
 def callback(code: str):
+    global access_token
+
     data = {
         "grant_type": "authorization_code",
         "client_id": CLIENT_ID,
@@ -44,4 +48,23 @@ def callback(code: str):
     }
 
     r = requests.post(CHASTER_TOKEN_URL, data=data)
-    return r.json()
+    token_data = r.json()
+
+    access_token = token_data["access_token"]
+
+    return {
+        "status": "logged_in",
+        "scope": token_data.get("scope"),
+    }
+    
+@app.get("/locks")
+def get_locks():
+    if not access_token:
+        return {"error": "Not logged in"}
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    r = requests.get("https://api.chaster.app/locks", headers=headers)
+    return r.json() 
