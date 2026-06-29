@@ -7,13 +7,14 @@ import requests
 from dotenv import load_dotenv
 import os
 from openai import OpenAI
+import json
+
+load_dotenv()
 
 client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY"),
     base_url="https://openrouter.ai/api/v1"
 )
-
-load_dotenv()
 
 app = FastAPI()
 
@@ -99,16 +100,24 @@ Rules:
 
 Return ONLY valid JSON.
 
-{
+{{
   "action": "none | extend | message | create_task",
   "duration_hours": number,
   "message": "...",
   "reason": "..."
-}
-
+}}
+"""
     response = client.chat.completions.create(
         model="meta-llama/llama-3.1-8b-instruct",
         messages=[{"role": "user", "content": prompt}]
     )
 
-    return response.choices[0].message.content
+    content = response.choices[0].message.content
+
+try:
+    return json.loads(content)
+except json.JSONDecodeError:
+    return {
+        "error": "AI returned invalid JSON",
+        "raw": content
+    }
