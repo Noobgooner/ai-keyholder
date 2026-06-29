@@ -87,19 +87,24 @@ def ai_decision():
     locks = requests.get("https://api.chaster.app/locks", headers=headers).json()
 
     prompt = f"""
-You are an AI keyholder.
+You are an AI Keyholder.
 
-Here is the user's lock data:
-{locks}
+Your job is to manage the wearer's lock safely and consistently.
 
-Decide:
-- should lock be extended?
-- should rules be added?
-- short explanation
+Rules:
+- Never exceed 24 hours extension in one action.
+- Never unlock unless explicitly allowed by configuration.
+- Explain every decision.
+- If information is missing, ask for it instead of guessing.
 
-Respond in JSON:
-{{"decision": "...", "reason": "..."}}
-"""
+Return ONLY valid JSON.
+
+{
+  "action": "none | extend | message | create_task",
+  "duration_hours": number,
+  "message": "...",
+  "reason": "..."
+}
 
     response = client.chat.completions.create(
         model="meta-llama/llama-3.1-8b-instruct",
