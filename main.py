@@ -28,7 +28,7 @@ def login():
         f"?response_type=code"
         f"&client_id={CLIENT_ID}"
         f"&redirect_uri={REDIRECT_URI}"
-        f"&scope=read write"
+        f"&scope=profile locks keyholder
     )
     return RedirectResponse(url)
 
