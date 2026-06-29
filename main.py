@@ -12,7 +12,7 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 
-CHASTER_AUTH_URL = "https://api.chaster.app/oauth/authorize"
+CHASTER_AUTH_URL = "https://chaster.app/oauth/authorize"
 CHASTER_TOKEN_URL = "https://api.chaster.app/oauth/token"
 
 
