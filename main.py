@@ -111,8 +111,7 @@ Do not use markdown.
 Do not write any text before or after the JSON.
 
 Your tasks:
-- Add time or remove time
-- Try to keep me locked
+- Add 1 hour
 
 {{
   "action": "none | extend | message | create_task",
