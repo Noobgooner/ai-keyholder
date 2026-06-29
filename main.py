@@ -8,7 +8,10 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url="https://openrouter.ai/api/v1"
+)
 
 load_dotenv()
 
@@ -99,7 +102,7 @@ Respond in JSON:
 """
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="meta-llama/llama-3.1-8b-instruct:free",
         messages=[{"role": "user", "content": prompt}]
     )
 
