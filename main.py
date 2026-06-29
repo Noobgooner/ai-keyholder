@@ -138,20 +138,20 @@ Return ONLY valid JSON in this format:
 
     match = re.search(r"\{.*\}", content, re.DOTALL)
 
-decision = json.loads(match.group())
+    decision = json.loads(match.group())
 
-lock_id = "6a42bef4a9a72455d86473c8"
+    lock_id = "6a42bef4a9a72455d86473c8"
 
-if decision["action"] == "extend":
-    result = extend_lock(
-        lock_id,
-decision.get("duration_hours", 1),
-        headers
-    )
+    if decision["action"] == "extend":
+        result = extend_lock(
+            lock_id,
+    decision.get("duration_hours", 1),
+            headers
+        )
 
-    return {
-        "ai_decision": decision,
-        "chaster_result": result
-    }
+        return {
+           "ai_decision": decision,
+            "chaster_result": result
+        }
 
-return decision
+    return decision
