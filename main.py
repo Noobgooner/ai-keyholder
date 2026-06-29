@@ -114,10 +114,10 @@ Return ONLY valid JSON.
 
     content = response.choices[0].message.content
 
-try:
-    return json.loads(content)
-except json.JSONDecodeError:
-    return {
-        "error": "AI returned invalid JSON",
-        "raw": content
-    }
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        return {
+            "error": "AI returned invalid JSON",
+            "raw": content
+        }
