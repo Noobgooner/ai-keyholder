@@ -142,7 +142,6 @@ decision = json.loads(match.group())
 
 lock_id = "6a42bef4a9a72455d86473c8"
 
-# AI rozhodnutí → reálná akce
 if decision["action"] == "extend":
     result = extend_lock(
         lock_id,
