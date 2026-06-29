@@ -25,10 +25,12 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 
 CHASTER_AUTH_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-connect/auth"
 CHASTER_TOKEN_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-connect/token"
+
 def extend_lock(lock_id, hours, headers):
-    url = f"https://api.chaster.app/locks/{lock_id}/extend"
+    url = f"https://api.chaster.app/locks/{lock_id}/time"
 
     payload = {
+        "operation": "add",
         "hours": hours
     }
 
