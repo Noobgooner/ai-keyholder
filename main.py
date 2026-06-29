@@ -79,7 +79,7 @@ def get_locks():
     return r.json() 
     
 @app.get("/ai-decision")
-def ai_decision():
+def ai_decision(message: str = ""):
     if not access_token:
         return {"error": "Not logged in"}
 
@@ -92,33 +92,26 @@ def ai_decision():
         headers=headers
     ).json()
 
-    prompt = f"""
+prompt = f"""
 You are an AI Keyholder.
-
-Your job is to manage the wearer's lock safely and consistently.
 
 Current lock data:
 {locks}
 
+User message:
+{message}
+
+Allowed actions:
+- none
+- extend
+- send_message
+
 Rules:
-- Never exceed 24 hours extension in one action.
-- Never unlock unless explicitly allowed by configuration.
-- Explain every decision.
-- If information is missing, ask for it instead of guessing.
+- Never extend by more than 24 hours.
+- Try to keep the wearer locked.
+- Be fair and consistent.
 
 Return ONLY valid JSON.
-Do not use markdown.
-Do not write any text before or after the JSON.
-
-Your tasks:
-- Add 1 hour
-
-{{
-  "action": "none | extend | message | create_task",
-  "duration_hours": 0,
-  "message": "...",
-  "reason": "..."
-}}
 """
 
     response = client.chat.completions.create(
