@@ -92,7 +92,7 @@ def ai_decision(message: str = ""):
         headers=headers
     ).json()
 
-   allowed_actions = ["extend", "send_message"]
+    allowed_actions = ["extend", "send_message"]
 
     prompt = f"""
 You are an AI Keyholder.
