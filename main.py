@@ -5,6 +5,10 @@ from fastapi.responses import RedirectResponse
 import os
 import requests
 from dotenv import load_dotenv
+import os
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 load_dotenv()
 
@@ -68,3 +72,35 @@ def get_locks():
 
     r = requests.get("https://api.chaster.app/locks", headers=headers)
     return r.json() 
+@app.get("/ai-decision")
+def ai_decision():
+    if not access_token:
+        return {"error": "Not logged in"}
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    locks = requests.get("https://api.chaster.app/locks", headers=headers).json()
+
+    prompt = f"""
+You are an AI keyholder.
+
+Here is the user's lock data:
+{locks}
+
+Decide:
+- should lock be extended?
+- should rules be added?
+- short explanation
+
+Respond in JSON:
+{{"decision": "...", "reason": "..."}}
+"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return response.choices[0].message.content
