@@ -25,7 +25,15 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 
 CHASTER_AUTH_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-connect/auth"
 CHASTER_TOKEN_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-connect/token"
+def extend_lock(lock_id, hours, headers):
+    url = f"https://api.chaster.app/locks/{lock_id}/extend"
 
+    payload = {
+        "hours": hours
+    }
+
+    r = requests.post(url, headers=headers, json=payload)
+    return r.json()
 
 @app.get("/")
 def home():
@@ -130,13 +138,21 @@ Return ONLY valid JSON in this format:
 
     match = re.search(r"\{.*\}", content, re.DOTALL)
 
-    if match:
-        try:
-            return json.loads(match.group())
-        except json.JSONDecodeError:
-            pass
+    decision = json.loads(match.group())
+
+lock_id = "6a42bef4a9a72455d86473c8"
+
+# AI rozhodnutí → reálná akce
+if decision["action"] == "extend":
+    result = extend_lock(
+        lock_id,
+        decision.get("duration_hours", 1),
+        headers
+    )
 
     return {
-        "error": "AI returned invalid JSON",
-        "raw": content
+        "ai_decision": decision,
+        "chaster_result": result
     }
+
+return decision
