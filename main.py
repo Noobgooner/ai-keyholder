@@ -13,7 +13,7 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 
 CHASTER_AUTH_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-connect/auth"
-CHASTER_TOKEN_URL = "https://api.chaster.app/oauth/token"
+CHASTER_TOKEN_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-connect/token"
 
 
 @app.get("/")
