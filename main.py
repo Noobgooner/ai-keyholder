@@ -92,7 +92,7 @@ def ai_decision(message: str = ""):
         headers=headers
     ).json()
 
-prompt = f"""
+    prompt = f"""
 You are an AI Keyholder.
 
 Current lock data:
