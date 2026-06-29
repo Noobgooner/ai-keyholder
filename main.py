@@ -92,6 +92,8 @@ def ai_decision(message: str = ""):
         headers=headers
     ).json()
 
+   allowed_actions = ["extend", "send_message"]
+
     prompt = f"""
 You are an AI Keyholder.
 
@@ -101,17 +103,17 @@ Current lock data:
 User message:
 {message}
 
-Allowed actions:
-- none
-- extend
-- send_message
+You may ONLY use one of these actions:
+{allowed_actions}
 
-Rules:
-- Never extend by more than 24 hours.
-- Try to keep the wearer locked.
-- Be fair and consistent.
+Return ONLY valid JSON in this format:
 
-Return ONLY valid JSON.
+{{
+  "action": "extend",
+  "duration_hours": 1,
+  "message": "",
+  "reason": ""
+}}
 """
 
     response = client.chat.completions.create(
