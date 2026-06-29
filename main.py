@@ -138,7 +138,7 @@ Return ONLY valid JSON in this format:
 
     match = re.search(r"\{.*\}", content, re.DOTALL)
 
-    decision = json.loads(match.group())
+decision = json.loads(match.group())
 
 lock_id = "6a42bef4a9a72455d86473c8"
 
