@@ -77,6 +77,7 @@ def get_locks():
 
     r = requests.get("https://api.chaster.app/locks", headers=headers)
     return r.json() 
+    
 @app.get("/ai-decision")
 def ai_decision():
     if not access_token:
@@ -86,7 +87,10 @@ def ai_decision():
         "Authorization": f"Bearer {access_token}"
     }
 
-    locks = requests.get("https://api.chaster.app/locks", headers=headers).json()
+    locks = requests.get(
+        "https://api.chaster.app/locks",
+        headers=headers
+    ).json()
 
     prompt = f"""
 You are an AI Keyholder.
@@ -103,39 +107,42 @@ Rules:
 - If information is missing, ask for it instead of guessing.
 
 Return ONLY valid JSON.
+Do not use markdown.
+Do not write any text before or after the JSON.
 
 Your tasks:
--Add time or remove time
--Try to keep me locked
+- Add time or remove time
+- Try to keep me locked
 
 {{
   "action": "none | extend | message | create_task",
-  "duration_hours": number,
+  "duration_hours": 0,
   "message": "...",
   "reason": "..."
 }}
 """
+
     response = client.chat.completions.create(
-    model="meta-llama/llama-3.1-8b-instruct:free",
-    messages=[
-        {
-            "role": "user",
-            "content": prompt
-        }
-    ]
-)
+        model="meta-llama/llama-3.1-8b-instruct:free",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
 
-content = response.choices[0].message.content
+    content = response.choices[0].message.content
 
-match = re.search(r"\{.*\}", content, re.DOTALL)
+    match = re.search(r"\{.*\}", content, re.DOTALL)
 
-if match:
-    try:
-        return json.loads(match.group())
-    except json.JSONDecodeError:
-        pass
+    if match:
+        try:
+            return json.loads(match.group())
+        except json.JSONDecodeError:
+            pass
 
-return {
-    "error": "AI returned invalid JSON",
-    "raw": content
-}
+    return {
+        "error": "AI returned invalid JSON",
+        "raw": content
+    }
