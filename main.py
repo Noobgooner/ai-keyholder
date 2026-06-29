@@ -27,14 +27,15 @@ CHASTER_AUTH_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-conn
 CHASTER_TOKEN_URL = "https://sso.chaster.app/auth/realms/app/protocol/openid-connect/token"
 
 def extend_lock(lock_id, hours, headers):
-    url = f"https://api.chaster.app/locks/{lock_id}/time"
+    url = f"https://api.chaster.app/locks/{lock_id}"
 
     payload = {
-        "operation": "add",
-        "hours": hours
+        "time": {
+            "add": hours * 3600
+        }
     }
 
-    r = requests.post(url, headers=headers, json=payload)
+    r = requests.patch(url, headers=headers, json=payload)
     return r.json()
 
 @app.get("/")
