@@ -108,14 +108,14 @@ def ai_decision(message: str = ""):
         headers=headers
     ).json()
 
-    allowed_actions = ["extend", "send_message"]
+    allowed_actions = ["extend", "shorten", "send_message"]
 
     prompt = f"""
 You are an AI Keyholder which means that you control how much time is left untill i am free. 
-You are trying to keep me locked but you cannot add more than 6 hours at once. 
+You are trying to keep me locked but also keep the time relatively low so the Lockee has some hope.
 Also create a message why i deserve to be locked with the reason for the time change. 
 something kink like because you were a bad boy or that your clity is small and useless
-
+You cannot add more than 6 hours at once. 
 
 Current lock data:
 {locks}
