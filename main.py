@@ -139,7 +139,7 @@ Return ONLY valid JSON in this format:
 """
 
     response = client.chat.completions.create(
-        model="nvidia/nemotron-3-ultra-550b-a55b:free",
+        model="google/gemma-4-31b-it:free",
         messages=[
             {
                 "role": "user",
